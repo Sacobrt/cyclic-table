@@ -80,17 +80,17 @@ function createCyclic(rows: number, columns: number, corner: Corner = "br", dir:
         table[r][c].cellNumber = currentNum++;
 
         let stepLen = 1;
-        while (currentNum <= total) {
+        const maxStepLen = 2 * Math.max(rows, columns);
+
+        while (currentNum <= total && stepLen <= maxStepLen) {
             for (let leg = 0; leg < 2 && currentNum <= total; leg++) {
                 const [dr, dc] = dirVectors[dirOrder[dirIdx]];
                 for (let s = 0; s < stepLen && currentNum <= total; s++) {
                     r += dr;
                     c += dc;
-                    if (r < 0 || r >= rows || c < 0 || c >= columns) {
-                        currentNum = total + 1;
-                        break;
+                    if (r >= 0 && r < rows && c >= 0 && c < columns) {
+                        table[r][c].cellNumber = currentNum++;
                     }
-                    table[r][c].cellNumber = currentNum++;
                 }
                 dirIdx = (dirIdx + turnStep) % 4;
             }
