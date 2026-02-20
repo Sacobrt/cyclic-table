@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CyclicService from "@/services/CyclicService";
 import { CellData } from "@/app/api/cyclic/route";
+import { getColMaxDigits, renderFormattedNumber } from "@/lib/utils";
 
 export default function EnhancedCyclic() {
     const [rows, setRows] = useState<number>(5);
@@ -22,6 +23,7 @@ export default function EnhancedCyclic() {
     const [jumpTo, setJumpTo] = useState<number>(0);
 
     const matrixCols = matrix && matrix[0] ? matrix[0].length : 0;
+    const colMaxDigits = useMemo(() => getColMaxDigits(matrix), [matrix]);
 
     const dirVectors: Record<string, [number, number]> = {
         left: [0, -1],
@@ -83,12 +85,12 @@ export default function EnhancedCyclic() {
     }, [rows, columns, corner]);
 
     useEffect(() => {
-        if ((rows === 2 || columns === 2) && corner === "cl") {
+        if (rows === 1 && columns === 1 && corner === "cl") {
             setCorner("br");
         }
     }, [rows, columns, corner]);
 
-    const showRotation = rows > 1 && columns > 1 && total > 1 && corner == "cl";
+    const showRotation = total > 1 && corner === "cl";
 
     async function load() {
         try {
@@ -115,9 +117,12 @@ export default function EnhancedCyclic() {
 
     useEffect(() => {
         if (!isPlaying || !matrix) return;
-        const interval = setInterval(() => {
-            setCurrentNumber((prev) => (prev < total ? prev + 1 : prev));
-        }, Math.max(50, speedMs));
+        const interval = setInterval(
+            () => {
+                setCurrentNumber((prev) => (prev < total ? prev + 1 : prev));
+            },
+            Math.max(50, speedMs),
+        );
         return () => clearInterval(interval);
     }, [isPlaying, matrix, speedMs, total]);
 
@@ -177,7 +182,7 @@ export default function EnhancedCyclic() {
                 }`}
                 style={{ width: 100, height: 100, backgroundColor: visible ? accent : "transparent" }}
             >
-                {visible && <span className="text-3xl font-semibold text-neutral-100">{cell.cellNumber}</span>}
+                {visible && <span className="text-3xl font-semibold text-neutral-100">{renderFormattedNumber(cell.cellNumber, c, colMaxDigits, total)}</span>}
 
                 {/* connectors (tiny bars) */}
                 {visible &&
@@ -285,7 +290,7 @@ export default function EnhancedCyclic() {
                                 <option value="tr">Top Right</option>
                                 <option value="bl">Bottom Left</option>
                                 <option value="br">Bottom Right</option>
-                                <option value="cl" disabled={rows === 2 || columns === 2}>
+                                <option value="cl" disabled={rows === 1 && columns === 1}>
                                     Center
                                 </option>
                             </select>
@@ -335,7 +340,7 @@ export default function EnhancedCyclic() {
                                 Reset
                             </button>
 
-                            <button type="button" onClick={() => setIsPlaying((s) => !s)} className="rounded-lg bg-emerald-500 px-3 py-1 text-sm">
+                            <button type="button" onClick={() => setIsPlaying((s) => !s)} className="rounded-lg bg-emerald-700 px-3 py-1 text-sm">
                                 {isPlaying ? "Pause" : "Play"}
                             </button>
 
