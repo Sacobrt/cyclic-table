@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import CyclicService from "@/services/CyclicService";
 import { CellData } from "@/app/api/cyclic/route";
+import { getColMaxDigits, renderFormattedNumber } from "@/lib/utils";
 
 export default function OriginalCyclic() {
     const [cyclic, setCyclic] = useState<CellData[][] | null>(null);
@@ -11,6 +12,7 @@ export default function OriginalCyclic() {
     const [error, setError] = useState<string | null>(null);
     const [currentNumber, setCurrentNumber] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
+    const colMaxDigits = getColMaxDigits(cyclic);
 
     async function getCyclic() {
         try {
@@ -119,7 +121,11 @@ export default function OriginalCyclic() {
                                                     onMouseEnter={(e) => isVisible && (e.currentTarget.style.backgroundColor = "#525252")}
                                                     onMouseLeave={(e) => isVisible && (e.currentTarget.style.backgroundColor = cellBgColor)}
                                                 >
-                                                    {isVisible && <span className="text-5xl font-semibold text-[#c7c7c7]">{cellNumber}</span>}
+                                                    {isVisible && (
+                                                        <span className="text-5xl font-semibold text-[#c7c7c7]">
+                                                            {renderFormattedNumber(cellNumber, cellIndex, colMaxDigits, formData.rows * formData.columns)}
+                                                        </span>
+                                                    )}
                                                     {cellUp && isVisible && (
                                                         <div className="absolute -top-1.5 left-1/2 h-3 w-2 -translate-x-1/2 transform bg-[#48ac47]" />
                                                     )}
@@ -134,7 +140,7 @@ export default function OriginalCyclic() {
                                                     )}
                                                 </div>
                                             );
-                                        })
+                                        }),
                                     )}
                                 </div>
                             </>
