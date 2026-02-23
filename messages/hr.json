@@ -1,0 +1,79 @@
+{
+    "app": {
+        "playPause": "Pokreni / Zaustavi",
+        "prev": "Prethodna",
+        "next": "Sljedeća",
+        "back": "Natrag",
+        "interactiveVis": "Interaktivna Vizualizacija",
+        "heroSubtitle": "Istražite numeričke sekvence kroz animirane matrične vizualizacije. Tri različita načina, jedan matematički obrazac.",
+        "v0Desc": "Postepeno otkrivanje s konfigurabilnim dimenzijama rešetke i glatkom animacijom ulaska.",
+        "v1Desc": "Podesivi početni kut, smjer kretanja i brzina reprodukcije s potpunim kontrolama animacije.",
+        "v2Desc": "Potpuni skup značajki — klizač brzine, pregled minimape, detalji na hover i tipkovnički prečaci."
+    },
+    "v0": {
+        "input": "ULAZ",
+        "output": "IZLAZ",
+        "numberOfRows": "Broj redaka",
+        "numberOfColumns": "Broj stupaca",
+        "createTable": "KREIRAJ TABLICU"
+    },
+    "matrix": {
+        "configuration": "Konfiguracija Matrice",
+        "configureParameters": "Konfigurirajte parametre ciklične tablice i animaciju",
+        "matrix": "Matrica",
+        "rows": "Redovi",
+        "columns": "Stupci",
+        "startPosition": "Početna Pozicija",
+        "direction": "Smjer",
+        "rotation": "Rotacija",
+        "visualization": "Vizualizacija Matrice",
+        "cellsRevealed": "otkriveno čelija"
+    },
+    "position": {
+        "topLeft": "Gore Lijevo",
+        "topRight": "Gore Desno",
+        "bottomLeft": "Dolje Lijevo",
+        "bottomRight": "Dolje Desno",
+        "center": "Centar"
+    },
+    "direction": {
+        "up": "Gore",
+        "down": "Dolje",
+        "left": "Lijevo",
+        "right": "Desno"
+    },
+    "rotation": {
+        "clockwise": "U smjeru kazaljke",
+        "counterClockwise": "Suprotno kazaljci"
+    },
+    "actions": {
+        "generateMatrix": "Generiraj Matricu",
+        "play": "Pokreni",
+        "pause": "Pauziraj",
+        "reset": "Resetiraj"
+    },
+    "animation": {
+        "controls": "Kontrole Animacije",
+        "speed": "Brzina",
+        "stepsPerSec": "koraka/sek",
+        "fast": "Brzo",
+        "slow": "Sporo",
+        "progress": "Napredak",
+        "start": "Početak",
+        "end": "Kraj",
+        "jumpToNumber": "Skoči na Broj",
+        "go": "Idi",
+        "previousStep": "Prethodni korak",
+        "nextStep": "Sljedeći korak",
+        "showAll": "Prikaži sve"
+    },
+    "settings": {
+        "language": "Jezik",
+        "en": "Engleski",
+        "hr": "Hrvatski"
+    },
+    "errors": {
+        "failedToLoadMatrix": "Neuspjeh učitavanja ciklične matrice",
+        "rowsColumnsRange": "Redovi i stupci moraju biti između 1 i 10"
+    }
+}

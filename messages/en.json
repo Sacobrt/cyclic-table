@@ -1,0 +1,79 @@
+{
+    "app": {
+        "playPause": "Play / Pause",
+        "prev": "Prev",
+        "next": "Next",
+        "back": "Back",
+        "interactiveVis": "Interactive Visualisation",
+        "heroSubtitle": "Explore number sequences through animated matrix visualisations. Three distinct modes, one mathematical pattern.",
+        "v0Desc": "Matrix appear one by one in a grid, using smooth animations.",
+        "v1Desc": "The grid can start from different corners, move in different directions, hover information, mini map, and keyboard controls.",
+        "v2Desc": "Advanced matrix include speed control, hover information, interactive mini map, and smoother animations."
+    },
+    "v0": {
+        "input": "INPUT",
+        "output": "OUTPUT",
+        "numberOfRows": "Number of rows",
+        "numberOfColumns": "Number of columns",
+        "createTable": "CREATE TABLE"
+    },
+    "matrix": {
+        "configuration": "Matrix Configuration",
+        "configureParameters": "Configure your cyclic table parameters and animation",
+        "matrix": "Matrix",
+        "rows": "Rows",
+        "columns": "Columns",
+        "startPosition": "Start Position",
+        "direction": "Direction",
+        "rotation": "Rotation",
+        "visualization": "Matrix Visualization",
+        "cellsRevealed": "cells revealed"
+    },
+    "position": {
+        "topLeft": "Top Left",
+        "topRight": "Top Right",
+        "bottomLeft": "Bottom Left",
+        "bottomRight": "Bottom Right",
+        "center": "Center"
+    },
+    "direction": {
+        "up": "Up",
+        "down": "Down",
+        "left": "Left",
+        "right": "Right"
+    },
+    "rotation": {
+        "clockwise": "Clockwise",
+        "counterClockwise": "Counter-clockwise"
+    },
+    "actions": {
+        "generateMatrix": "Generate Matrix",
+        "play": "Play",
+        "pause": "Pause",
+        "reset": "Reset"
+    },
+    "animation": {
+        "controls": "Animation Controls",
+        "speed": "Speed",
+        "stepsPerSec": "steps/sec",
+        "fast": "Fast",
+        "slow": "Slow",
+        "progress": "Progress",
+        "start": "Start",
+        "end": "End",
+        "jumpToNumber": "Jump to Number",
+        "go": "Go",
+        "previousStep": "Previous step",
+        "nextStep": "Next step",
+        "showAll": "Show all"
+    },
+    "settings": {
+        "language": "Language",
+        "en": "English",
+        "hr": "Hrvatski"
+    },
+    "errors": {
+        "failedToLoadMatrix": "Failed to load cyclic matrix",
+        "rowsColumnsRange": "Rows and columns must be between 1 and 10"
+    }
+}
