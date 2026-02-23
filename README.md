@@ -1,64 +1,74 @@
 # Cyclic Table
 
-A small interactive Next.js app that generates and visualizes "cyclic" numbered tables (spiral or center-out layouts). The UI contains two views:
-
--   Original: a stylized static-ish visual with simple controls (`OriginalCyclic`).
--   Enhanced: an interactive player with animation, keyboard controls and configuration (`EnhancedCyclic`).
-
 The app exposes a server API that builds the cyclic matrix, and the client-side components fetch that matrix and render connectors between adjacent numbers.
 
 Tech highlights
 
--   Next.js (app router)
--   React 19 (client components)
--   Tailwind CSS
--   Radix UI Tabs
--   Axios for client API calls
+- Next.js 16
+- React 19
+- shadcn/ui
+- Tailwind CSS
 
 ## Features
 
--   Generate numbered tables in spiral or center-out orders.
--   Configurable start location (top-left, top-right, bottom-left, bottom-right, center).
--   Direction and rotation options for center-start layouts.
--   Animated reveal with keyboard shortcuts (Space = play/pause, ←/→ = prev/next).
--   Small, dependency-light codebase for experimentation.
+- Generate numbered tables in spiral or center-out orders.
+- Configurable start location (top-left, top-right, bottom-left, bottom-right, center).
+- Direction and rotation options for center-start layouts.
+- Animated reveal with keyboard shortcuts (Space = play/pause, ←/→ = prev/next).
+- Small, dependency-light codebase for experimentation.
+- Supported language: English and Croatian
+
+## Implementations
+
+The project contains multiple implementations / UI variants so you can compare approaches or iterate quickly:
+
+- `v0` — Original static-ish visual with simple controls. Implemented in [src/components/CyclicV0.tsx](src/components/CyclicV0.tsx).
+- `v1` — Enhanced interactive with animation, keyboard controls and configuration. Implemented in [src/components/CyclicV1.tsx](src/components/CyclicV1.tsx).
+- `v2` — Experimental/alternate rendering and performance tweaks. Implemented in [src/components/CyclicV2.tsx](src/components/CyclicV2.tsx).
+
+Each variant has a corresponding route under [src/app/](src/app/) (`/v0`, `/v1`, `/v2`) for quick previewing.
 
 ## Preview
 
-Original view:
+V0 view:
 
-![Original preview](public/orignal-preview.png)
+![v0](public/v0.png)
 
-Enhanced view (interactive):
+V1 view:
 
-![Enhanced preview](public/enhanced-preview.png)
+![v1](public/v1.png)
+
+V2 view:
+
+![v2](public/v2.png)
 
 ## API
 
 Base endpoint (app router):
 
--   GET /api/cyclic/:rows/:columns
+- GET `/api/cyclic/:rows/:columns`
 
 Query parameters:
 
--   corner: one of `tl`, `tr`, `bl`, `br`, `cl`, `cr`, `ct`, `cb` (default `br`).
--   dir: `up` | `down` | `left` | `right` (default `left`).
--   rotation: `cw` | `ccw` (default `cw`).
+- corner: one of `tl`, `tr`, `bl`, `br`, `cl`, `cr`, `ct`, `cb` (default `br`).
+- dir: `up` | `down` | `left` | `right` (default `left`).
+- rotation: `cw` | `ccw` (default `cw`).
 
 Constraints enforced on the server:
 
--   rows and columns must be numbers between 1 and 10 (inclusive). Requests outside this range return HTTP 400 with an explanatory message.
+- rows and columns must be numbers between 1 and 10 (inclusive). Requests outside this range return HTTP 400 with an explanatory message.
+
+Server implementation note: the server-side route that implements this is at [src/app/api/cyclic/route.ts](src/app/api/cyclic/route.ts) and performs the input validation and matrix construction.
 
 Response shape
 
--   The API returns a 2D array of cells. Each cell object has the following shape (TypeScript type located at `src/app/api/cyclic/route.ts`):
-
-    -   cellNumber: number
-    -   cellUp: boolean
-    -   cellDown: boolean
-    -   cellLeft: boolean
-    -   cellRight: boolean
-    -   cellBgColor: string (CSS color)
+- The API returns a 2D array of cells. Each cell object has the following shape (TypeScript type located at `src/app/api/cyclic/route.ts`):
+    - cellNumber: number
+    - cellUp: boolean
+    - cellDown: boolean
+    - cellLeft: boolean
+    - cellRight: boolean
+    - cellBgColor: string (CSS color)
 
 Example curl (PowerShell):
 
@@ -68,49 +78,61 @@ curl "http://localhost:3000/api/cyclic/5/5?corner=br&dir=left&rotation=cw" | Con
 
 Client helper
 
--   `src/services/CyclicService.ts` exposes a convenience `get(rows, columns, opts)` that returns an Axios promise for the endpoint above.
+- `src/services/CyclicService.ts` exposes a convenience `get(rows, columns, opts)` that returns an Axios promise for the endpoint above.
 
-## Components
+Client usage example (Axios)
 
--   `src/app/page.tsx` — main page, uses Radix `Tabs` to switch between the two visualizations.
--   `src/components/OriginalCyclic.tsx` — original UI with forms and basic animation.
--   `src/components/EnhancedCyclic.tsx` — richer UI: keyboard controls, play/pause, speed, hover tooltips and connectors.
--   `src/components/ui/tabs.tsx` — small wrapper around `@radix-ui/react-tabs` used by the layout.
+```ts
+import CyclicService from "./src/services/CyclicService";
 
-Design notes
+// returns a promise that resolves to the 2D cell matrix
+const resp = await CyclicService.get(5, 5, { corner: "br", dir: "left", rotation: "cw" });
+console.log(resp.data);
+```
 
--   The client expects the API to return the adjacency booleans (cellUp/cellDown/…) so it can draw connectors between numbers.
+## Getting Started
 
-## Development
+Install dependencies using your preferred package manager:
 
-Install dependencies and run the app in development mode:
-
-```powershell
+```bash
 npm install
+# or
+bun install
+```
+
+Start the development server:
+
+```bash
 npm run dev
+# or
+bun dev
 ```
 
 Open http://localhost:3000 in your browser.
 
 Available npm scripts (from `package.json`):
 
--   `dev` — start Next.js dev server
--   `build` — build for production
--   `start` — start built production server
--   `lint` — run ESLint
+- `dev` — start Next.js dev server
+- `build` — build for production
+- `start` — start built production server
+- `lint` — run ESLint
 
 Notes
 
--   The project uses Next.js 15 and React 19. Tailwind and a few UI helpers are present in the repo.
+- The project uses Next.js 16 and React 19. Tailwind and a few UI helpers are present in the repo.
+
+Quick start
+
+```powershell
+npm install
+npm run dev
+# open http://localhost:3000
+```
 
 ## Usage examples
 
 Keyboard controls in the Enhanced view
 
--   Space - play / pause
--   ArrowRight - advance one number
--   ArrowLeft - go back one number
-
-## Contributing
-
-Small project — open an issue or PR. Please run the linter before pushing.
+- Space - play / pause
+- ArrowRight - advance one number
+- ArrowLeft - go back one number
