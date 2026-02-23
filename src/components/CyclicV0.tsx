@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import CyclicService from "@/services/CyclicService";
 import { CellData } from "@/app/api/cyclic/route";
 import { getColMaxDigits, renderFormattedNumber } from "@/lib/utils";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function OriginalCyclic() {
+    const currentLocale = useLocale();
+    const tOriginal = useTranslations("v0");
+    const tErrors = useTranslations("errors");
     const [cyclic, setCyclic] = useState<CellData[][] | null>(null);
     const [formData, setFormData] = useState({ rows: 5, columns: 5 });
     const [submittedColumns, setSubmittedColumns] = useState<number>(5);
@@ -27,7 +31,7 @@ export default function OriginalCyclic() {
             }
         } catch (e) {
             console.error(e);
-            setError("Failed to load cyclic matrix");
+            setError(tErrors("failedToLoadMatrix"));
         }
     }
 
@@ -62,28 +66,26 @@ export default function OriginalCyclic() {
             <div className="ml-10 flex flex-col items-start justify-center md:flex-row">
                 {/* INPUT SECTION */}
                 <div className="relative mt-10 ml-10 grid grid-flow-row items-start justify-center">
-                    <span className="absolute top-[50px] -left-40 ml-10 -rotate-90 text-5xl font-bold text-[#525252]">INPUT</span>
+                    <span className={`absolute ${currentLocale === "en" ? "top-12.5" : "top-11"} -left-40 ml-10 -rotate-90 text-5xl font-bold text-[#525252]`}>
+                        {tOriginal("input")}
+                    </span>
                     <form onSubmit={handleSubmit} className="-mr-5 space-y-5">
                         {["rows", "columns"].map((field, index) => (
                             <div key={index} className="grid text-xl text-[#c8c8c8]">
                                 <label className="font-semibold" htmlFor={field}>
-                                    {field === "rows" ? "Number of rows" : "Number of columns"}
+                                    {field === "rows" ? tOriginal("numberOfRows") : tOriginal("numberOfColumns")}
                                 </label>
                                 <input
                                     type="number"
                                     id={field}
                                     value={(formData as any)[field]}
                                     onChange={handleInputChange}
-                                    className="mt-5 h-[60px] w-[220px] rounded-lg border-[4px] border-[#c8c8c8] bg-[#525252] text-center text-4xl font-semibold outline-0 focus:ring-0"
+                                    className="mt-5 h-15 w-55 rounded-lg border-4 border-[#c8c8c8] bg-[#525252] text-center text-4xl font-semibold outline-0 focus:ring-0"
                                 />
                             </div>
                         ))}
-                        <button
-                            type="submit"
-                            style={{ marginTop: "80px" }}
-                            className="w-[260px] rounded-lg bg-[#48ac47] py-4 text-2xl font-semibold text-[#c8c8c8]"
-                        >
-                            CREATE TABLE
+                        <button type="submit" style={{ marginTop: "80px" }} className="w-65 rounded-lg bg-[#48ac47] py-4 text-2xl font-semibold text-[#c8c8c8]">
+                            {tOriginal("createTable")}
                         </button>
                     </form>
                 </div>
@@ -100,7 +102,11 @@ export default function OriginalCyclic() {
                         )}
                         {cyclic && !error && (
                             <>
-                                <span className="absolute top-[80px] -left-40 ml-5 -rotate-90 text-5xl font-bold text-[#525252]">OUTPUT</span>
+                                <span
+                                    className={`absolute ${currentLocale === "en" ? "top-20 ml-5" : "top-13 ml-10"} -left-40 -rotate-90 text-5xl font-bold text-[#525252]`}
+                                >
+                                    {tOriginal("output")}
+                                </span>
                                 <div className="mt-2 grid overflow-x-auto" style={{ gridTemplateColumns: `repeat(${submittedColumns}, 123px)` }}>
                                     {cyclic.map((row, rowIndex) =>
                                         row.map(({ cellNumber, cellBgColor, cellUp, cellDown, cellLeft, cellRight }, cellIndex) => {
@@ -109,7 +115,7 @@ export default function OriginalCyclic() {
                                             return (
                                                 <div
                                                     key={`${rowIndex}-${cellIndex}`}
-                                                    className={`relative flex cursor-pointer items-center justify-center rounded-lg border-[2px] border-[#c7c7c7] transition-all duration-500 ease-in-out ${
+                                                    className={`relative flex cursor-pointer items-center justify-center rounded-lg border-2 border-[#c7c7c7] transition-all duration-500 ease-in-out ${
                                                         isVisible ? "scale-100 opacity-100" : "scale-75 opacity-0"
                                                     }`}
                                                     style={{

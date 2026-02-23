@@ -1,11 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import CyclicService from "@/services/CyclicService";
 import { CellData } from "@/app/api/cyclic/route";
 import { getColMaxDigits, renderFormattedNumber } from "@/lib/utils";
 
-export default function EnhancedCyclic() {
+export default function Cyclic() {
+    const tMatrix = useTranslations("matrix");
+    const tPosition = useTranslations("position");
+    const tDirection = useTranslations("direction");
+    const tRotation = useTranslations("rotation");
+    const tActions = useTranslations("actions");
+    const tAnimation = useTranslations("animation");
+    const tErrors = useTranslations("errors");
     const [rows, setRows] = useState<number>(5);
     const [columns, setColumns] = useState<number>(5);
     const [matrix, setMatrix] = useState<CellData[][] | null>(null);
@@ -106,7 +114,7 @@ export default function EnhancedCyclic() {
             setIsPlaying(true);
         } catch (e) {
             console.error(e);
-            setError("Failed to load cyclic matrix");
+            setError(tErrors("failedToLoadMatrix"));
         }
     }
 
@@ -144,7 +152,7 @@ export default function EnhancedCyclic() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (rows < 1 || rows > 10 || columns < 1 || columns > 10) {
-            setError("Rows and columns must be between 1 and 10");
+            setError(tErrors("rowsColumnsRange"));
             return;
         }
         load();
@@ -250,13 +258,13 @@ export default function EnhancedCyclic() {
     const hoverNeighbors = hoverInfo ? getNeighborInfo(hoverInfo.r, hoverInfo.c) : null;
 
     return (
-        <div className="flex items-center min-h-screen flex-col bg-neutral-900 p-0 text-neutral-100">
+        <div className="flex items-center min-h-screen flex-col p-0 text-neutral-100">
             {/* Top navbar */}
-            <header className="z-20 w-full border-b border-neutral-800 bg-neutral-900/70 p-4 backdrop-blur">
-                <div className="mx-auto flex max-w-7xl items-center gap-4">
+            <header className="z-20 w-full border-b border-neutral-800 px-5 xl:px-0 py-2 backdrop-blur">
+                <div className="mx-auto flex max-w-6xl items-center gap-4">
                     <form onSubmit={handleSubmit} className="flex w-full flex-wrap items-center gap-3">
                         <label className="flex flex-col">
-                            <span className="text-xs text-neutral-400">Rows</span>
+                            <span className="text-xs text-neutral-400">{tMatrix("rows")}</span>
                             <input
                                 type="number"
                                 min={1}
@@ -268,7 +276,7 @@ export default function EnhancedCyclic() {
                         </label>
 
                         <label className="flex flex-col">
-                            <span className="text-xs text-neutral-400">Cols</span>
+                            <span className="text-xs text-neutral-400">{tMatrix("columns")}</span>
                             <input
                                 type="number"
                                 min={1}
@@ -280,28 +288,28 @@ export default function EnhancedCyclic() {
                         </label>
 
                         <label className="flex flex-col">
-                            <span className="text-xs text-neutral-400">Start</span>
+                            <span className="text-xs text-neutral-400">{tMatrix("startPosition")}</span>
                             <select
                                 value={corner}
                                 onChange={(e) => setCorner(e.target.value as any)}
                                 className="mt-1 w-36 rounded-lg bg-neutral-800 px-2 py-1 text-sm"
                             >
-                                <option value="tl">Top Left</option>
-                                <option value="tr">Top Right</option>
-                                <option value="bl">Bottom Left</option>
-                                <option value="br">Bottom Right</option>
+                                <option value="tl">{tPosition("topLeft")}</option>
+                                <option value="tr">{tPosition("topRight")}</option>
+                                <option value="bl">{tPosition("bottomLeft")}</option>
+                                <option value="br">{tPosition("bottomRight")}</option>
                                 <option value="cl" disabled={rows === 1 && columns === 1}>
-                                    Center
+                                    {tPosition("center")}
                                 </option>
                             </select>
                         </label>
 
                         <label className="flex flex-col">
-                            <span className="text-xs text-neutral-400">Dir</span>
+                            <span className="text-xs text-neutral-400">{tMatrix("direction")}</span>
                             <select value={dir} onChange={(e) => setDir(e.target.value as any)} className="mt-1 w-28 rounded-lg bg-neutral-800 px-2 py-1 text-sm">
                                 {validDirList.map((d) => (
                                     <option key={d} value={d}>
-                                        {d.charAt(0).toUpperCase() + d.slice(1)}
+                                        {tDirection(d as "up" | "down" | "left" | "right")}
                                     </option>
                                 ))}
                             </select>
@@ -309,21 +317,21 @@ export default function EnhancedCyclic() {
 
                         {showRotation && (
                             <label className="flex flex-col">
-                                <span className="text-xs text-neutral-400">Rot</span>
+                                <span className="text-xs text-neutral-400">{tMatrix("rotation")}</span>
                                 <select
                                     value={rotation}
                                     onChange={(e) => setRotation(e.target.value as any)}
                                     className="mt-1 w-36 rounded-lg bg-neutral-800 px-2 py-1 text-sm"
                                 >
-                                    <option value="cw">Clockwise</option>
-                                    <option value="ccw">Counter-clockwise</option>
+                                    <option value="cw">{tRotation("clockwise")}</option>
+                                    <option value="ccw">{tRotation("counterClockwise")}</option>
                                 </select>
                             </label>
                         )}
 
                         <div className="ml-auto flex items-center gap-2">
                             <button type="submit" className="rounded-lg bg-indigo-600 px-3 py-1 text-sm font-semibold">
-                                Apply
+                                {tActions("generateMatrix")}
                             </button>
                             <button
                                 type="button"
@@ -337,11 +345,11 @@ export default function EnhancedCyclic() {
                                 }}
                                 className="rounded-lg border border-neutral-700 px-3 py-1 text-sm"
                             >
-                                Reset
+                                {tActions("reset")}
                             </button>
 
                             <button type="button" onClick={() => setIsPlaying((s) => !s)} className="rounded-lg bg-emerald-700 px-3 py-1 text-sm">
-                                {isPlaying ? "Pause" : "Play"}
+                                {isPlaying ? tActions("pause") : tActions("play")}
                             </button>
 
                             <div className="flex items-center gap-2">
@@ -358,7 +366,7 @@ export default function EnhancedCyclic() {
                                     onClick={() => setCurrentNumber(Math.max(0, Math.min(total, Math.floor(jumpTo))))}
                                     className="rounded-md border px-3 py-1 text-sm"
                                 >
-                                    Go
+                                    {tAnimation("go")}
                                 </button>
                             </div>
                         </div>
@@ -367,8 +375,8 @@ export default function EnhancedCyclic() {
             </header>
 
             {/* Grid */}
-            <main className="flex-1 overflow-auto bg-neutral-900 p-6">
-                <div className="mx-auto max-w-7xl">
+            <main className="flex-1 overflow-auto p-6">
+                <div className="mx-auto container">
                     <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${matrixCols || columns}, 100px)` }}>
                         {matrix &&
                             (() => {
@@ -397,7 +405,7 @@ export default function EnhancedCyclic() {
                     </div>
                     <div className="mt-2 text-sm text-neutral-300">
                         <div>
-                            Up: <strong className="text-emerald-400">{hoverInfo?.data.cellUp ? "yes" : "no"}</strong>
+                            {tDirection("up")}: <strong className="text-emerald-400">{hoverInfo?.data.cellUp ? "yes" : "no"}</strong>
                             {hoverNeighbors?.up && (
                                 <span className="ml-2 text-xs text-neutral-400">
                                     ({hoverNeighbors.up.n} r{hoverNeighbors.up.r} c{hoverNeighbors.up.c})
@@ -405,7 +413,7 @@ export default function EnhancedCyclic() {
                             )}
                         </div>
                         <div>
-                            Down: <strong className="text-emerald-400">{hoverInfo?.data.cellDown ? "yes" : "no"}</strong>
+                            {tDirection("down")}: <strong className="text-emerald-400">{hoverInfo?.data.cellDown ? "yes" : "no"}</strong>
                             {hoverNeighbors?.down && (
                                 <span className="ml-2 text-xs text-neutral-400">
                                     ({hoverNeighbors.down.n} r{hoverNeighbors.down.r} c{hoverNeighbors.down.c})
@@ -413,7 +421,7 @@ export default function EnhancedCyclic() {
                             )}
                         </div>
                         <div>
-                            Left: <strong className="text-emerald-400">{hoverInfo?.data.cellLeft ? "yes" : "no"}</strong>
+                            {tDirection("left")}: <strong className="text-emerald-400">{hoverInfo?.data.cellLeft ? "yes" : "no"}</strong>
                             {hoverNeighbors?.left && (
                                 <span className="ml-2 text-xs text-neutral-400">
                                     ({hoverNeighbors.left.n} r{hoverNeighbors.left.r} c{hoverNeighbors.left.c})
@@ -421,7 +429,7 @@ export default function EnhancedCyclic() {
                             )}
                         </div>
                         <div>
-                            Right: <strong className="text-emerald-400">{hoverInfo?.data.cellRight ? "yes" : "no"}</strong>
+                            {tDirection("right")}: <strong className="text-emerald-400">{hoverInfo?.data.cellRight ? "yes" : "no"}</strong>
                             {hoverNeighbors?.right && (
                                 <span className="ml-2 text-xs text-neutral-400">
                                     ({hoverNeighbors.right.n} r{hoverNeighbors.right.r} c{hoverNeighbors.right.c})
